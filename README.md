@@ -1,7 +1,5 @@
 # Asimov inference with neural ratio estimation
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rafaellopesdesa/nre_asimov_demo/blob/main/NRE_Asimov.ipynb)
-
 A standalone demonstration of the finite-sample Asimov construction for neural
 ratio estimation (NRE). The notebook generates its own events, trains the
 preselection and ratio classifiers, and compares expected likelihood scans and
@@ -10,7 +8,7 @@ analysis repositories are required.
 
 ## Run the notebook
 
-Open [NRE_Asimov.ipynb](NRE_Asimov.ipynb) in Colab, select a **GPU runtime**,
+Open NRE_Asimov.ipynb in Colab, select a **GPU runtime**,
 and run the cells in order. The setup installs the requirements and, by default,
 mounts Google Drive. Persistent outputs go to
 `MyDrive/nre_asimov_demo/workspace/`.
@@ -93,9 +91,3 @@ being overwritten automatically.
 - `utils_nre_inference.py`: likelihood fits, finite-sample Asimov construction,
   validated compression, cached toys, and score diagnostics.
 - `utils_nre_plotting.py`: inline Matplotlib figures.
-
-The analysis utilities are adapted from
-[`nsbi-lhc-toolkit`](https://github.com/rafaellopesdesa/nsbi-lhc-toolkit), at
-revision [`2d617967`](https://github.com/rafaellopesdesa/nsbi-lhc-toolkit/commit/2d617967d3926bb57229a6e44e24969611fa7439).
-The runtime is self-contained. The software is distributed under the MIT
-license; see [LICENSE.txt](LICENSE.txt).
