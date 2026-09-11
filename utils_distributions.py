@@ -1,8 +1,4 @@
-"""Five-dimensional signal/background mixtures and detector response.
-
-This module intentionally depends only on NumPy (and SciPy when evaluating a
-density).  Simulation can use these definitions without importing a neural-network stack.
-"""
+"""Gaussian mixtures and detector response."""
 
 import numpy as np
 
@@ -17,8 +13,6 @@ def build_cov(sigmas, correlations=None):
     return np.outer(sigmas, sigmas) * corr
 
 
-# Shared broad component -- present in every sample to guarantee overlapping
-# support for density-ratio estimation.
 BASE_MEAN = np.array([2.5, 2.0, 3.0, 1.5, 2.5])
 BASE_SIGMA = np.array([2.5, 2.4, 2.5, 2.4, 2.5])
 BASE_COV = build_cov(BASE_SIGMA)
@@ -60,28 +54,8 @@ def signal_components(v=10):
     return [sig_a, sig_b, base]
 
 
-def mixture_density(X, components):
-    """Evaluate a normalized Gaussian-mixture density at points ``X``."""
-    from scipy.stats import multivariate_normal
-
-    X = np.asarray(X, dtype=float)
-    fracs = np.array([component[0] for component in components], dtype=float)
-    fracs = fracs / fracs.sum()
-    density = np.zeros(len(X))
-    for (_, mean, cov), frac in zip(components, fracs):
-        density += frac * multivariate_normal(mean, cov).pdf(X)
-    return density
-
-
 def smearing_parameters():
     """Return the nominal detector-response scale and resolution vectors."""
     scale = np.array([1.2, 1.1, 0.99, 0.96, 1.01])
     resolution = np.array([1.0, 0.1, 0.9, 1.3, 0.2])
     return [scale, resolution]
-
-
-def reference_density(X, lam_bkg, lam_sig0):
-    """Evaluate the yield-weighted background and ``v=0`` signal mixture."""
-    p_bkg = mixture_density(X, background_components())
-    p_sig0 = mixture_density(X, signal_components(0))
-    return (lam_bkg * p_bkg + lam_sig0 * p_sig0) / (lam_bkg + lam_sig0)
