@@ -102,7 +102,7 @@ def _new_artifact(path):
         descriptor = os.open(str(lock), os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     except FileExistsError as error:
         raise CacheError(
-            f"Artifact is locked: {lock}. If the previous Colab session ended, "
+            f"Artifact is locked: {lock}. If the previous session ended, "
             "confirm that no worker is running before removing this lock. "
             "Completed artifacts and previous trainings must be preserved."
         ) from error
@@ -366,7 +366,10 @@ def _torch():
     try:
         import torch
     except ImportError as error:
-        raise ImportError("Install PyTorch in the notebook setup cell to train/evaluate NRE.") from error
+        raise ImportError(
+            "Install PyTorch in the Python environment used by the notebook kernel "
+            "to train/evaluate NRE."
+        ) from error
     return torch
 
 
@@ -385,7 +388,10 @@ def _network(config):
 def _device(config):
     torch = _torch()
     if config["device"] == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA was requested but PyTorch cannot see a GPU; choose a Colab GPU runtime.")
+        raise RuntimeError(
+            "CUDA was requested but PyTorch cannot see a GPU. Check your NVIDIA GPU, "
+            "driver, and CUDA-enabled PyTorch installation, or select device='cpu'."
+        )
     return torch.device("cuda" if config["device"] == "auto" and torch.cuda.is_available() else
                         "cpu" if config["device"] == "auto" else config["device"])
 
